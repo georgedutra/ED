@@ -39,7 +39,7 @@ int main()
     else
     {
         cout << "Segundo os parâmetros mais recentes, você está na classificação de obesidade grave!" << endl;
-    };
+    }
 
     return 0;
 }
