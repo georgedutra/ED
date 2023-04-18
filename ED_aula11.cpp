@@ -2,118 +2,126 @@
 
 using namespace std;
 
+// Built-in Array (C-Style) vs Array/Vector
+// string vs. C-Style
+
 /*
 int main()
-{
-    int arriValores[5] = {0,7,42,666,1000};
-    cout << "Endereço de V[0]:" << arriValores << endl;
+{   
+    // Variável: referência direta para um valor na memória; aponta diretamente para o valor
+    // Ponteiro: referência indireta para um valor; aponta para um endereço específico na memória
+    // Ponteiros são um tipo
 
-    int* ptrArrayValores1 = arriValores;
-    cout << "PTR 1: " << ptrArrayValores1 << endl;
-
-    int* ptrArrayValores2 = &arriValores[0];
-    cout << "PTR 2: " << ptrArrayValores1 << endl;
-
-    if (ptrArrayValores1 == ptrArrayValores2) cout << "São iguais!" << endl;
-    cout << "=============================================" << endl;
-
-    cout << "Valor de ptrArrayValores1[0]: " << *ptrArrayValores1 << endl;
-    cout << "Endereço de ptrArrayValores1[0]: " << ptrArrayValores1 << endl;
-    cout << "\n" << endl;
-
-    // Não sei o que rolou aqui
-    cout << "Valor estranho: " << ++*ptrArrayValores1 << endl;
-    cout << "Endereço estranho: " << ptrArrayValores1 << endl; // Ele não atualiza inplace 
-    cout << "\n" << endl;
-
-    ptrArrayValores1 += 1;
-    cout << "Valor de ptrArrayValores1[0 + 1]: " << *ptrArrayValores1 << endl; 
-    cout << "Endereço de ptrArrayValores1[0 + 1]: " << ptrArrayValores1 << endl;
-    cout << "\n" << endl;
-
-    ptrArrayValores1 += 2;
-    cout << "Valor de ptrArrayValores1[0 + 3]: " << *ptrArrayValores1 << endl; 
-    cout << "Endereço de ptrArrayValores1[0 + 3]: " << ptrArrayValores1 << endl;
-    cout << "\n" << endl;
-
-    ptrArrayValores1 -= 2;
-    cout << "Valor de ptrArrayValores1[0 + 1]: " << *ptrArrayValores1 << endl; 
-    cout << "Endereço de ptrArrayValores1[0 + 1]: " << ptrArrayValores1 << endl;
-    cout << "\n" << endl;
+    // É essencial inicializar um ponteiro na criação! Um ponteiro não inicializado aponta aleatoriamente.
+    // int* ptrInt = 0;
+    // int* ptrInt = NULL;
+    int* ptrInt = nullptr; 
     
-    cout << "Valor estranho: " << ptrArrayValores1 - ptrArrayValores2 << endl; 
-    // Aquele valor era a "distância" entre um ponteiro e outro
+    cout << "PTR: " << ptrInt << endl;
+    cout << "Endereço do PTR: " << &ptrInt << endl; // Posso ter um ponteiro pra um ponteiro? Sim e usamos muito! E assim por diante..
+    cout << "===================================" << endl;
     
-    cout << "=============================================" << endl;
-   
+    int iNumMagico = 42;
+    cout << "iNumMagico: " << iNumMagico << endl;
+    cout << "Endereço do iNumMagico: " << &iNumMagico << endl;
+
+    // ptrInt = iNumMagico; // Não funciona >:(
+    ptrInt = &iNumMagico; 
+    cout << "PTR: " << ptrInt << endl;
+    cout << "Endereço do PTR: " << &ptrInt << endl; 
+    cout << "===================================" << endl;
+    // O ponteiro agora aponta para o iNumMagico, seu conteúdo é o endereço da variável, e seu endereço também!
+
+    cout << "Tamanhos de Tipos: " << endl; 
+    cout << "Tamanhos de char - " << sizeof(char) << endl; 
+    cout << "Tamanhos de int - " << sizeof(int) << endl; 
+    cout << "Tamanhos de double - " << sizeof(double) << endl; 
+    cout << "===================================" << endl;
+
+    cout << "Tamanhos de Ponteiros para Tipos: " << endl; 
+    cout << "Tamanhos de char - " << sizeof(char*) << endl; 
+    cout << "Tamanhos de int - " << sizeof(int*) << endl; 
+    cout << "Tamanhos de double - " << sizeof(double*) << endl; 
+    cout << "===================================" << endl;
+    // Perceba que o tamanho de um ponteiro é o tamanho padrão do sistema operacional: 64 bits (8 bytes)
+
+    cout << "PTR: " << ptrInt << endl;
+    cout << "Valor do PTR do iNumMagico: " << *ptrInt << endl; // O asterisco é um operador unário (operador de dereferência) 
+    cout << "===================================" << endl;
+
     return 0;
 }
 */
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-struct Node
+/*
+int main()
 {
-    int data;
-    struct Node* next; // Esse objeto tem dentro de si um ponteiro que aponta para o próximo elemento
-};
+    int iNum1 = 42;
+    int iNum2 = 666;
 
-void printList(struct Node* sNode)
-{
-    while (sNode != nullptr)
-    {
-        cout << "Dado do nó: " << sNode -> data << endl;
-        sNode = sNode -> next;
-    }
+    // Ponteiro constante 
+    int* const ptrNum1 = &iNum1;
+    *ptrNum1 = 7; // Podemos mudar um valor através do ponteiro
+    // ptrNum1 = &iNum2; // Não funciona, o ponteiro é constante D:<
+
+    cout << "PTR1: " << ptrNum1 << endl;
+    cout << "Valor do PTR1: " << *ptrNum1 << endl;
+    cout << "===================================" << endl;
+
+    const int* ptrNum2 = &iNum2;
+    ptrNum2 = &iNum1;
+    // *ptrNum2 = 7; // Não funciona, o ponteiro aponta pra uma constante >:(
+
+    cout << "PTR2: " << ptrNum2 << endl;
+    cout << "Valor do PTR2: " << *ptrNum2 << endl;
+    cout << "===================================" << endl;
+
+    const int* const ptrNum3 = &iNum1; // Esse é um ponteiro constante apontando pra uma constante!
+    cout << "Endereço de iNum1: " << ptrNum3 << endl;
+    cout << "PTR3: " << ptrNum3 << endl;
+    cout << "Valor do iNum1: " << iNum1 << endl;
+    cout << "Valor do PTR3: " << *ptrNum3 << endl;
+    cout << "===================================" << endl;
+
+    return 0;
 }
+*/
 
-void addToList(struct Node* head, int iValue)
-{
-    struct Node* proximo= nullptr;
-    proximo = (struct Node*) malloc(sizeof(struct Node));
-    proximo -> data = iValue;
-    proximo -> next = nullptr; 
+int cubo(int*);
 
-    while (head -> next != nullptr)
-    {
-        head = head -> next;
-    }
-
-    head -> next = proximo;
-}
+// int somaVetor(const int[], const size_t);
+int somaVetor(const int*, const size_t);
 
 int main()
 {
-    struct Node* head = nullptr;
-    struct Node* second = nullptr;
-    struct Node* third = nullptr;
+    int iNum1 = 3;
+    int iResultado = 0;
 
-    // Isso é um cast, que converte o tipo de um elemento com a sintaxe: a = (new_type) new_type
-    head = (struct Node*) malloc(sizeof(struct Node)); // malloc pede memória para o SO, vem de memory allocation
-    second = (struct Node*) malloc(sizeof(struct Node));
-    third = (struct Node*) malloc(sizeof(struct Node));
+    iResultado = cubo(&iNum1);
+    cout << "Resultado: " << iResultado << endl;
+    cout << "===================================" << endl;
 
-    // Se não tinha memória suficiente para o malloc, o SO te devolve um nullptr, e devemos tomar cuidado com isso! 
-    // if (head == nullptr) resolve isso ae
-
-    // Com o operador arrow, nós acessamos um membro de dados de uma struct
-    head -> data = 7;
-    second -> data = 42;
-    third -> data = 666;
-
-    // Por fim, fazemos nossos ponteiros apontarem um pro outro para construir uma lista!
-    head -> next = second;
-    second -> next = third;
-    third -> next = nullptr; // O último item da lista não aponta pra ninguém
-
-    printList(head);
-    addToList(head, 1);
-    printList(head);
-
-    // Para não causar memory leak, precisamos liberar TODA memória que pedimos para ser alocada
-    free(third); // É importante liberar de trás para frente
-    free(second);
-    free(head); // Cuidado! Quando liberamos a head, perdemos qualquer pista que tínhamos daquela estrutura, não sabemos mais onde ela está ou estava!
+    int arriValores[3] = {0,1,2};
+    iResultado = somaVetor(arriValores, 3);
+    cout << "Resultado: " << iResultado << endl;
+    cout << "===================================" << endl;
 
     return 0;
+}
+
+int cubo(int* ptrNum)
+{
+    return (*ptrNum) * (*ptrNum) * (*ptrNum);
+}
+
+// Se passamos um vetor raiz para uma função, o C++ passa secretamente um ponteiro constante para o primeiro elemento...
+// int somaVetor(const int valores[] , const size_t tamVetor) 
+// {
+//     return -1;
+// }
+
+int somaVetor(const int* valores, const size_t tamVetor)
+{
+    return -1;
+
 }
