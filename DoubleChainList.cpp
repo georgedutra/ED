@@ -20,40 +20,39 @@ struct List
 };
 
 // Função que cria um nó
-struct Node* createNode(int iVal, struct Node* previous, struct Node* next)
+struct Node* createNode(int iVal)
 {
     struct Node* newNode = (struct Node*) malloc(sizeof(struct Node));
     newNode->iData = iVal;
-    newNode->ptrNext = next; 
-    newNode->ptrPrev = previous; 
+    newNode->ptrNext = nullptr; 
+    newNode->ptrPrev = nullptr; 
 
     return newNode;
 }
 
 // Função que insere um nó no início da estrutura lista
-void insertFront(struct List* list, int iVal)
-{    
-    struct Node* newNode = createNode(iVal, nullptr, list->head);
+void insertFront(struct List* list, struct Node* newNode)
+{
     // O primeiro nó sempre aponta para nullptr para a esquerda
+    newNode->ptrPrev = nullptr;
+    newNode->ptrNext = list->head;
 
-    if (list->head != nullptr) list->head->ptrPrev = newNode; // Se existia algo na lista, agora o segundo aponta para o novo primeiro 
-    else list->tail = newNode; // Se não existia nada, o novo Node é o primeiro e o último
+    if (list->head == nullptr) list->tail = newNode; // Se não existia nada na lista, o novo Node é o primeiro e o último
+    else list->head->ptrPrev = newNode; // Se existia algo, agora o segundo aponta para o novo primeiro 
 
     list->head = newNode; // Atualizando o head
 }
 
 // Função que insere um nó no final da estrutura lista
-void insertEnd(struct List* list, int iVal)
+void insertEnd(struct List* list, struct Node* newNode)
 {
-    // O último nó sempre aponta para nullptr para a direita, mas vamos deixar para a esquerda também por enquanto
-    struct Node* newNode = createNode(iVal, nullptr, nullptr);
+    // O último nó sempre aponta para nullptr para a direita
+    newNode->ptrNext = nullptr;
+    newNode->ptrPrev = list->tail;
 
     if (list->head == nullptr) list->head = newNode;  // Se a lista está vazia, o último também é o primeiro
-    else // Se não está vazia:
-    {
-        list->tail->ptrNext = newNode; // O antigo último aponta para o novo
-        newNode->ptrPrev = list->tail; // O novo último aponta para o antigo
-    }
+    else list->tail->ptrNext = newNode;
+
     list->tail = newNode; // Atualizando o tail
 }
 
@@ -128,16 +127,16 @@ void deleteLast(struct List* list)
 }
 
 // Função que recebe um nó de uma lista, e insere um novo logo após na estrutura
-void insertAfter(struct Node* ptrLoc, int iPayload)
+void insertAfter(struct Node* ptrLoc, struct Node* newNode)
 {
     if (ptrLoc == nullptr)
     {
         cout << "Não foi possível realizar a inserção" << endl;
         return;
     } 
-    
-    // Criando o novo nó
-    struct Node* newNode = createNode(iPayload, ptrLoc, ptrLoc->ptrNext);
+    // Arrumando o newNode
+    newNode->ptrNext = ptrLoc->ptrNext;
+    newNode->ptrPrev = ptrLoc;
 
     // Corrigindo o next do ptrLoc
     ptrLoc->ptrNext = newNode;
@@ -174,4 +173,112 @@ void deleteNode(struct List* list, struct Node* ptrDelete)
 
     free(ptrDelete); // Libera memória
 }
+
+// Função que remove um nó e o mantém existindo
+struct Node* popNode(struct List* list, struct Node* ptrDelete)
+{   
+    // Se algum dos dois for nulo, mensagem de erro!
+    if (list->head == nullptr || ptrDelete == nullptr)
+    {
+        cout << "Não foi possível deletar :(" << endl;
+        return nullptr;
+    }
+    
+    if(ptrDelete->ptrNext != nullptr) ptrDelete->ptrNext->ptrPrev = ptrDelete->ptrPrev;
+    else list->tail = ptrDelete->ptrPrev;
+
+    if(ptrDelete->ptrPrev != nullptr) ptrDelete->ptrPrev->ptrNext = ptrDelete->ptrNext;
+    else list->head = ptrDelete->ptrNext;
+
+    return ptrDelete;
+}
+
+// Função para saber o tamanho de uma lista duplamente encadeada
+int getLenght(struct List* list)
+{
+    int counter = 0;
+    struct Node* temp = list->head;
+    while (temp!=nullptr)
+    {
+        counter++;
+        temp = temp->ptrNext;
+    }
+    return counter;
+}
+
+// Função que troca de lugar dois Nodes na estrutura de lista encadeada
+void swapNodes(struct List* list, struct Node* node1, struct Node* node2)
+{
+    struct Node* temp; // Criando um ponteiro temporário para utilidade
+
+    // Casos Especiais: 
+    
+    // Aqui criei variáveis que indicam se os nodes 1 e 2 possuem prev ou next.
+    bool prev1 = true, prev2 = true, next1 = true, next2 = true;
+    
+    // Se não possuem, significa que são head ou tail da lista
+    if (node1 == list->head) prev1 = false;
+    if (node2 == list->head) prev2 = false;
+    if (node1 == list->tail) next1 = false;
+    if (node2 == list->tail) next2 = false;
+
+    // Casos em que os Nodes são adjacentes:
+
+    // Se o node2 vem logo antes do 1, basta trocar os nomes e os indicadores de head/tail, pois queremos que o 1 venha antes do 2
+    if (node2->ptrNext == node1)
+    {
+        temp = node1;
+        node1 = node2;
+        node2 = temp;
+        
+        if (prev2==false) prev1 = false;
+        prev2 = true;
+
+        if (next1==false) next2 = false;
+        next1 = true;
+    }
+
+    // Se agora o node1 vem logo antes do 2, fazemos o necessário para Nodes adjacentes:
+    if (node1->ptrNext == node2)
+    {
+        if(prev1==true) node1->ptrPrev->ptrNext = node2;    
+        else list->head = node2;
+
+        if(next2==true) node2->ptrNext->ptrPrev = node1;
+        else list->tail = node1;
+
+        node1->ptrNext = node2->ptrNext;
+        node2->ptrPrev = node1->ptrPrev;
+
+        node1->ptrPrev = node2;
+        node2->ptrNext = node1;
+        return;
+    }
+
+    // Se não são adjacentes, não importa mais quem vem antes ou depois, e partimos para os casos em que os Nodes estão separados:
+
+    // Primeiro alteramos os nós ao redor dos trocados, se eles existem
+    if(prev1==true) node1->ptrPrev->ptrNext = node2;
+    if(next1==true) node1->ptrNext->ptrPrev = node2;
+    
+    if(prev2==true) node2->ptrPrev->ptrNext = node1;
+    if(next2==true) node2->ptrNext->ptrPrev = node1;
+
+    // Também alteramos os ponteiros da nossa lista caso sejam head ou tail
+    if(prev1==false) list->head = node2;
+    if(prev2==false) list->head = node1;
+
+    if(next1==false) list->tail = node2;
+    if(next2==false) list->tail = node1;
+
+    // Por fim, atualizamos os ponteiros dos Nodes alterados, com ajuda do temp auxiliar
+    temp = node1->ptrNext;
+    node1->ptrNext = node2->ptrNext;
+    node2->ptrNext = temp;
+
+    temp = node1->ptrPrev;
+    node1->ptrPrev = node2->ptrPrev;
+    node2->ptrPrev = temp;
+}
+
 //////////////////////////////////////////////////////////////////////////////////////
