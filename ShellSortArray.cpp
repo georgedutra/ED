@@ -94,59 +94,77 @@ void shellSortHibbard(int array[], int iLenght, int k0)
     }
 }
 
-int main()
+// Essa função só serve pra testar caeda sort varias vezes e tirar uma média do tempo
+void testSorts(int iTimes)
 {
+    long long int iVal1 = 0, iVal2 = 0, iVal3 = 0;
     int iSize = 1000;
-    int randArray[iSize];
-    int randArray2[iSize];
-    int randArray3[iSize];
 
-    for(int i=0; i<iSize; i++)
+    for (int i=1; i<=iTimes; i++)
     {
-        randArray[i] = rand()%1000;  //Generate number between 0 to 999
-        randArray2[i] = rand()%1000;  //Generate number between 0 to 999
-        randArray3[i] = rand()%1000;  //Generate number between 0 to 999
+        int randArray[iSize];
+        int randArray2[iSize];
+        int randArray3[iSize];
+
+        for(int i=0; i<iSize; i++)
+        {
+            randArray[i] = rand()%1000;  //Generate number between 0 to 999
+            randArray2[i] = rand()%1000;  //Generate number between 0 to 999
+            randArray3[i] = rand()%1000;  //Generate number between 0 to 999
+        }
+
+        // cout << "Array original: ";
+        // printArray(randArray, iSize);
+        // cout << "================================\n" << endl;
+        
+        auto timeStart = high_resolution_clock::now(); // Iniciamos um cronômetro agora
+        insertionSort(randArray, iSize);
+        auto timeStop = high_resolution_clock::now(); // Paramos o cronômetro
+
+        ////////////////////////////////////////////////////////////////////////////////
+        auto timeStart2 = high_resolution_clock::now(); // Iniciamos um cronômetro agora
+        shellSort(randArray2, iSize);
+        auto timeStop2 = high_resolution_clock::now(); // Paramos o cronômetro
+
+        ////////////////////////////////////////////////////////////////////////////////
+        int k0 = 1;
+        while ((pow(2, k0+1)-1) < iSize) k0++; // Procuramos qual o primeiro incremento de Hibbard que pode ser utilizado
+
+        auto timeStart3 = high_resolution_clock::now(); // Iniciamos um cronômetro agora
+        shellSortHibbard(randArray3, iSize, k0);
+        auto timeStop3 = high_resolution_clock::now(); // Paramos o cronômetro
+        ////////////////////////////////////////////////////////////////////////////////
+
+        // cout << "Arrays originais ordenados: " << endl;
+        // printArray(randArray, iSize);
+        // printArray(randArray2, iSize);
+        // printArray(randArray3, iSize);
+        
+        auto timeDuration = duration_cast<nanoseconds>(timeStop - timeStart);
+        // cout << "Tempo utilizado Insertion: " << timeDuration.count() << " nanossegundos" << endl;
+        // cout << "================================\n" << endl;
+
+        auto time2Duration = duration_cast<nanoseconds>(timeStop2 - timeStart2);
+        // cout << "Tempo utilizado Shell: " << time2Duration.count() << " nanossegundos" << endl;
+        // cout << "================================\n" << endl;
+
+        auto time3Duration = duration_cast<nanoseconds>(timeStop3 - timeStart3);
+        // cout << "Tempo utilizado Hibbard: " << time3Duration.count() << " nanossegundos" << endl;
+        // cout << "================================\n" << endl;
+
+        iVal1 += timeDuration.count();
+        iVal2 += time2Duration.count();
+        iVal3 += time3Duration.count();
     }
 
-    cout << "Array original: ";
-    printArray(randArray, iSize);
-    cout << "================================\n" << endl;
-    
-    auto timeStart = high_resolution_clock::now(); // Iniciamos um cronômetro agora
-    insertionSort(randArray, iSize);
-    auto timeStop = high_resolution_clock::now(); // Paramos o cronômetro
+    cout << "Média do Insertion em nanossegundos: " << iVal1/iTimes << endl;
+    cout << "Média do Shell em nanossegundos: " << iVal2/iTimes << endl;
+    cout << "Média do Hibbard em nanossegundos: " << iVal3/iTimes << endl;
+}
 
-    ////////////////////////////////////////////////////////////////////////////////
-    auto timeStart2 = high_resolution_clock::now(); // Iniciamos um cronômetro agora
-    shellSort(randArray2, iSize);
-    auto timeStop2 = high_resolution_clock::now(); // Paramos o cronômetro
-
-    ////////////////////////////////////////////////////////////////////////////////
-    int k0 = 1;
-    while ((pow(2, k0+1)-1) < iSize) k0++; // Procuramos qual o primeiro incremento de Hibbard que pode ser utilizado
-
-    auto timeStart3 = high_resolution_clock::now(); // Iniciamos um cronômetro agora
-    shellSortHibbard(randArray3, iSize, k0);
-    auto timeStop3 = high_resolution_clock::now(); // Paramos o cronômetro
-    ////////////////////////////////////////////////////////////////////////////////
-
-    cout << "Arrays originais ordenados: " << endl;
-    printArray(randArray, iSize);
-    printArray(randArray2, iSize);
-    printArray(randArray3, iSize);
-    
-    auto timeDuration = duration_cast<nanoseconds>(timeStop - timeStart);
-    cout << "Tempo utilizado Insertion: " << timeDuration.count() << " nanossegundos" << endl;
-    cout << "================================\n" << endl;
-
-    auto time2Duration = duration_cast<nanoseconds>(timeStop2 - timeStart2);
-    cout << "Tempo utilizado Shell: " << time2Duration.count() << " nanossegundos" << endl;
-    cout << "================================\n" << endl;
-
-    auto time3Duration = duration_cast<nanoseconds>(timeStop3 - timeStart3);
-    cout << "Tempo utilizado Hibbard: " << time3Duration.count() << " nanossegundos" << endl;
-    cout << "================================\n" << endl;
-
+int main()
+{
+    testSorts(10000);
     // Parece que o incremento de Shell ainda é mais rápido para vetores de até 1000 elementos
     return 0;
 }
