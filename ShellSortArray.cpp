@@ -98,7 +98,7 @@ void shellSortHibbard(int array[], int iLenght, int k0)
 void testSorts(int iTimes)
 {
     long long int iVal1 = 0, iVal2 = 0, iVal3 = 0;
-    int iSize = 1000;
+    int iSize = 10000;
 
     for (int i=1; i<=iTimes; i++)
     {
@@ -164,7 +164,7 @@ void testSorts(int iTimes)
 
 int main()
 {
-    testSorts(10000);
-    // Parece que o incremento de Shell ainda é mais rápido para vetores de até 1000 elementos
+    testSorts(100);
+    // Parece que o incremento de Shell ainda é mais rápido para vetores de até 10000 elementos
     return 0;
 }
