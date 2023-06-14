@@ -9,6 +9,7 @@
 // Full Binary Tree: Árvores Binárias em que todo nó tem ou 0, ou 2 filhos, mas nunca 1
 
 // DFS: Depht First Search, um método de busca para atravessar uma árvore
+// Três tipos de sequenciamento de árvores: pré-ordem, pós-ordem, e em ordem
 
 #include <iostream>
 
@@ -20,8 +21,6 @@ struct Node
     struct Node* ptrLeft;
     struct Node* ptrRight;
 };
-
-// Três tipos de sequenciamento de árvores: pré-ordem, pós-ordem, e em ordem
 
 
 struct Node* newNode(int iData)
