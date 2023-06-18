@@ -165,6 +165,5 @@ void testSorts(int iTimes)
 int main()
 {
     testSorts(100);
-    // Parece que o incremento de Shell ainda é mais rápido para vetores de até 10000 elementos
     return 0;
 }

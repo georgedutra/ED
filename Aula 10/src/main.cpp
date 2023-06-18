@@ -1,22 +1,29 @@
 #include <iostream>
-#include "livro.h" // Aqui nós incluímos nossa própria "biblioteca"
-// Essa parte do código ainda não funciona, pois incluindo o livro.h que tem a referência da funcaoOrganizada,
-// ele deveria referenciar o arquivo livro.cpp automaticamente, mas para funcionar na máquina local,  
-// precisamos organizar o projeto nas pastas certas...
+#include "livro.h" 
 
+/* Importante:
+Para que isso funcione, é necessário que, no momento que pedimos para o compilador (g++, gpp, cl, etc.) buildar o projeto,
+passemos todos os arquivos .cpp para serem compilados (nesse caso, tanto o main.cpp quanto o livro.cpp).
+É possível configurar o CodeRunner para tal, ou faz~e-lo manualmente pelo terminal.
+*/
 using std::cout;
+using std::cin;
 using std::endl;
-
 int main()
 {
-    struct Livro livro1;
+    struct Livro* livro1 = new(Livro);
+    livro1->iPublicacao = 1970;
     struct Livro livro2;
     
     // Sabia que o struct não é necessário em C++?
     // Livro livro1;
     // Livro livro2;
+    // cout << livro1->iPublicacao;
+    int i = 42;
+    funcaoOrganizada(i);
 
-    funcaoOrganizada(42);
+
+    return 0;
 }
 
 
