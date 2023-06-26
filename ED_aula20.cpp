@@ -6,7 +6,9 @@
 // Leaf Node (Nó terminal, que não possui descendentes)
 
 // Binary Tree: Árvores em que todo nó tem entre 0 e 2 filhos
+// Complete Binary Tree: Árvores em que todo nível (exceto o último) tem 2 filhos, e é sempre preenchida da esquerda para a direita.
 // Full Binary Tree: Árvores Binárias em que todo nó tem ou 0, ou 2 filhos, mas nunca 1
+// Perfect Binary Tree: Árvores Binárias cheias, em que todas as folhas estão no mesmo nível
 
 // DFS: Depht First Search, um método de busca para atravessar uma árvore
 // Três tipos de sequenciamento de árvores: pré-ordem, pós-ordem, e em ordem
